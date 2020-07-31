@@ -16,7 +16,7 @@ contract CrossChain is System, ICrossChain, IParamSubscriber{
 
   // constant variables
   string constant public STORE_NAME = "ibc";
-  uint256 constant public CROSS_CHAIN_KEY_PREFIX = 0x01006000; // last 6 bytes
+  uint256 constant public CROSS_CHAIN_KEY_PREFIX = 0x0000000000000000000000000000000000000000000000000000000001006000; // last 6 bytes
   uint8 constant public SYN_PACKAGE = 0x00;
   uint8 constant public ACK_PACKAGE = 0x01;
   uint8 constant public FAIL_ACK_PACKAGE = 0x02;
@@ -276,11 +276,10 @@ function encodePayload(uint8 packageType, uint256 relayFee, bytes memory msgByte
         channelId := mload(add(valueLocal, 1))
       }
 
-      uint8 rewardConfig;
+      uint8 isRewardFromSystem;
       assembly {
-        rewardConfig := mload(add(valueLocal, 2))
+        isRewardFromSystem := mload(add(valueLocal, 2))
       }
-      bool isRewardFromSystem = (rewardConfig == 0x0);
 
       address handlerContract;
       assembly {
@@ -290,7 +289,7 @@ function encodePayload(uint8 packageType, uint256 relayFee, bytes memory msgByte
       require(isContract(handlerContract), "address is not a contract");
       channelHandlerContractMap[channelId]=handlerContract;
       registeredContractChannelMap[handlerContract][channelId] = true;
-      isRelayRewardFromSystemReward[channelId] = isRewardFromSystem;
+      isRelayRewardFromSystemReward[channelId] = (isRewardFromSystem == 0x0);
       emit addChannel(channelId, handlerContract);
     } else if (Memory.compareStrings(key, "enableOrDisableChannel")) {
       bytes memory valueLocal = value;

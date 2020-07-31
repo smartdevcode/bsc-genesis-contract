@@ -60,15 +60,6 @@ contract('RelayerIncentivize', (accounts) => {
         let roundSequence = await relayerIncentivize.roundSequence.call();
         assert.equal(roundSequence.toNumber(), 1, "wrong round sequence");
 
-        await relayerIncentivize.claimRelayerReward(accounts[1], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[2], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[3], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[4], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[5], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[6], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[7], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[8], {from: accounts[0]});
-
         const newAccount1Balance = await web3.eth.getBalance(accounts[1]);
         const newAccount2Balance = await web3.eth.getBalance(accounts[2]);
         const newAccount3Balance = await web3.eth.getBalance(accounts[3]);
@@ -165,15 +156,6 @@ contract('RelayerIncentivize', (accounts) => {
         let roundSequence = await relayerIncentivize.roundSequence.call();
         assert.equal(roundSequence.toNumber(), 2, "wrong round sequence");
 
-        await relayerIncentivize.claimRelayerReward(accounts[1], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[2], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[3], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[4], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[5], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[6], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[7], {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(accounts[8], {from: accounts[0]});
-
         const newAccount1Balance = await web3.eth.getBalance(accounts[1]);
         const newAccount2Balance = await web3.eth.getBalance(accounts[2]);
         const newAccount3Balance = await web3.eth.getBalance(accounts[3]);
@@ -220,10 +202,6 @@ contract('RelayerIncentivize', (accounts) => {
         const originSystemRewardBalance = await web3.eth.getBalance(systemReward.address);
 
         await relayerIncentivize.addReward(relayer, tendermintLightClient.address, web3.utils.toBN(1e16), true, {from: tokenHub});
-
-        await relayerIncentivize.claimRelayerReward(relayer, {from: accounts[0]});
-        await relayerIncentivize.claimRelayerReward(tendermintLightClient.address, {from: accounts[0]});
-
         const newSystemRewardBalance = await web3.eth.getBalance(systemReward.address);
         assert.equal(web3.utils.toBN(newSystemRewardBalance).sub(web3.utils.toBN(originSystemRewardBalance)).eq(web3.utils.toBN(146812500000000000)), true, "wrong amount to systemReward contract");
 

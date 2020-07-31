@@ -17,11 +17,11 @@ program.option(
 )
 program.option("--roundSize <roundSize>",
     "roundSize",
-    "100");
+    "1000");
 
 program.option("--maximumWeight <maximumWeight>",
     "maximumWeight",
-    "40");
+    "400");
 
 program.option("--moleculeHeaderRelayer <moleculeHeaderRelayer>",
     "moleculeHeaderRelayer",
