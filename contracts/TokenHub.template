@@ -105,9 +105,6 @@ contract TokenHub is ITokenHub, System, IParamSubscriber, IApplication, ISystemR
 
   function claimRewards(address payable to, uint256 amount) onlyInit onlyRelayerIncentivize external override returns(uint256) {
     uint256 actualAmount = amount < address(this).balance ? amount : address(this).balance;
-    if (actualAmount > 1e18) {
-      return 0;
-    }
     if (actualAmount>0) {
       to.transfer(actualAmount);
       emit rewardTo(to, actualAmount);
