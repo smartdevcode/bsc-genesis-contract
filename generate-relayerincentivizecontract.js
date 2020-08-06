@@ -17,26 +17,26 @@ program.option(
 )
 program.option("--roundSize <roundSize>",
     "roundSize",
-    "100");
+    "1000");
 
 program.option("--maximumWeight <maximumWeight>",
     "maximumWeight",
-    "40");
+    "400");
 
-program.option("--headerRelayerRewardRateMolecule <headerRelayerRewardRateMolecule>",
-    "headerRelayerRewardRateMolecule",
+program.option("--moleculeHeaderRelayer <moleculeHeaderRelayer>",
+    "moleculeHeaderRelayer",
     "1");
 
-program.option("--headerRelayerRewardRateDenominator <headerRelayerRewardRateDenominator>",
-    "headerRelayerRewardRateDenominator",
+program.option("--denominatorHeaderRelayer <denominatorHeaderRelayer>",
+    "denominatorHeaderRelayer",
     "5");
 
-program.option("--callerCompensationMolecule <callerCompensationMolecule>",
-    "callerCompensationMolecule",
+program.option("--moleculeCallerCompensation <moleculeCallerCompensation>",
+    "moleculeCallerCompensation",
     "1");
 
-program.option("--callerCompensationDenominator <callerCompensationDenominator>",
-    "callerCompensationDenominator",
+program.option("--denominatorCallerCompensation <denominatorCallerCompensation>",
+    "denominatorCallerCompensation",
     "80");
 
 program.option("--mock <mock>",
@@ -48,10 +48,10 @@ program.parse(process.argv);
 const data = {
   roundSize: program.roundSize,
   maximumWeight: program.maximumWeight,
-  headerRelayerRewardRateMolecule: program.headerRelayerRewardRateMolecule,
-  headerRelayerRewardRateDenominator: program.headerRelayerRewardRateDenominator,
-  callerCompensationMolecule: program.callerCompensationMolecule,
-  callerCompensationDenominator: program.callerCompensationDenominator,
+  moleculeHeaderRelayer: program.moleculeHeaderRelayer,
+  denominatorHeaderRelayer: program.denominatorHeaderRelayer,
+  moleculeCallerCompensation: program.moleculeCallerCompensation,
+  denominatorCallerCompensation: program.denominatorCallerCompensation,
   mock: program.mock,
 };
 const templateString = fs.readFileSync(program.template).toString();

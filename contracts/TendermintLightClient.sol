@@ -33,7 +33,7 @@ contract TendermintLightClient is ILightClient, System, IParamSubscriber{
   /* solium-disable-next-line */
   constructor() public {}
 
-  function init() external onlyNotInit {
+  function init() public onlyNotInit {
     uint256 pointer;
     uint256 length;
     (pointer, length) = Memory.fromBytes(INIT_CONSENSUS_STATE_BYTES);
@@ -63,7 +63,11 @@ contract TendermintLightClient is ILightClient, System, IParamSubscriber{
 
     uint64 preValidatorSetChangeHeight = latestHeight;
     ConsensusState memory cs = lightClientConsensusStates[preValidatorSetChangeHeight];
-    for (; preValidatorSetChangeHeight < height && preValidatorSetChangeHeight >= initialHeight;) {
+    for (; preValidatorSetChangeHeight >= initialHeight;) {
+      if (preValidatorSetChangeHeight < height) {
+        // find nearest previous height
+        break;
+      }
       preValidatorSetChangeHeight = cs.preValidatorSetChangeHeight;
       cs = lightClientConsensusStates[preValidatorSetChangeHeight];
     }
@@ -103,11 +107,11 @@ contract TendermintLightClient is ILightClient, System, IParamSubscriber{
       length := mload(add(result, 0))
     }
     bool validatorChanged = false;
-    if ((length&(0x01<<248))!=0x00) {
+    if ((length&0x0100000000000000000000000000000000000000000000000000000000000000)!=0x00) {
       validatorChanged = true;
       ISystemReward(SYSTEM_REWARD_ADDR).claimRewards(msg.sender, rewardForValidatorSetChange);
     }
-    length = length&0xffffffffffffffff;
+    length = length&0x000000000000000000000000000000000000000000000000ffffffffffffffff;
 
     /* solium-disable-next-line */
     assembly {
