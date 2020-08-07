@@ -30,6 +30,7 @@ contract BSCValidatorSet is IBSCValidatorSet, System, IParamSubscriber, IApplica
   // the precision of cross chain value transfer.
   uint256 public constant PRECISION = 1e10;
   uint256 public constant EXPIRE_TIME_SECOND_GAP = 1000;
+  uint256 public constant MAX_NUM_OF_VALIDATORS = 41;
 
   bytes public constant INIT_VALIDATORSET_BYTES = hex"f84580f842f840949fb29aac15b9a4b7f17c3385939b007540f4d791949fb29aac15b9a4b7f17c3385939b007540f4d791949fb29aac15b9a4b7f17c3385939b007540f4d79164";
 
@@ -159,21 +160,19 @@ contract BSCValidatorSet is IBSCValidatorSet, System, IParamSubscriber, IApplica
 
   function jailValidator(Validator memory v) internal returns (uint32) {
     uint256 index = currentValidatorSetMap[v.consensusAddress];
-    if (index==0) {
+    if (index==0 || currentValidatorSet[index-1].jailed) {
       emit validatorEmptyJailed(v.consensusAddress);
       return CODE_OK;
     }
     uint n = currentValidatorSet.length;
-    bool shouldKeep = (numOfJailed >= n-1 && !currentValidatorSet[index-1].jailed);
+    bool shouldKeep = (numOfJailed >= n-1);
     // will not jail if it is the last valid validator
     if (shouldKeep) {
       emit validatorEmptyJailed(v.consensusAddress);
       return CODE_OK;
     }
-    if(currentValidatorSet[index-1].jailed == false){
-      numOfJailed ++;
-      currentValidatorSet[index-1].jailed = true;
-    }
+    numOfJailed ++;
+    currentValidatorSet[index-1].jailed = true;
     emit validatorJailed(v.consensusAddress);
     return CODE_OK;
   }
@@ -394,6 +393,9 @@ contract BSCValidatorSet is IBSCValidatorSet, System, IParamSubscriber, IApplica
   /*********************** Internal Functions **************************/
 
   function checkValidatorSet(Validator[] memory validatorSet) private pure returns(bool, string memory) {
+    if (validatorSet.length > MAX_NUM_OF_VALIDATORS){
+      return (false, "the number of validators exceed the limit");
+    }
     for (uint i = 0;i<validatorSet.length;i++) {
       for (uint j = 0;j<i;j++) {
         if (validatorSet[i].consensusAddress == validatorSet[j].consensusAddress) {
