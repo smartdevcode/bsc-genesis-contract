@@ -42,17 +42,10 @@ contract MaliciousToken is Context, IBEP2E, Ownable {
   }
 
   /**
-   * @dev Returns the token symbol.
+   * @dev Returns the contract owner.
    */
   function symbol() external override view returns (string memory) {
     return _symbol;
-  }
-
-  /**
- * @dev Returns the token name.
- */
-  function name() external view returns (string memory) {
-    return _name;
   }
 
   /**
